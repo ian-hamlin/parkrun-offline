@@ -37,8 +37,8 @@ fn main() {
     let opt = Opt::from_args();
     let mut pr = parkrun::Parkrun::new(opt.url, opt.output);
 
-    match pr.download() {
-        Ok(_) => println!("nice..."),
-        Err(e) => println!("nooo {:?}", e)
+    match pr.orchestrate() {
+        Ok(_) => println!("Extract complete"),
+        Err(e) => println!("Failed to complete {:?}", e),
     }
 }
