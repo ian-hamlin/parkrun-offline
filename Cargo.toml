@@ -1,0 +1,20 @@
+[package]
+name = "parkrun-offline"
+version = "0.1.0"
+authors = ["ian-hamlin <ian@ihamlin.co.uk>"]
+edition = "2018"
+description = """
+parkrun-offline is an app that will download parkrun results to a csv file.
+"""
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+bench = false
+path = "src/main.rs"
+name = "proff"
+
+[dependencies]
+structopt = "0.2"
+reqwest = "0.9"
+table-extract = "0.2.1"
