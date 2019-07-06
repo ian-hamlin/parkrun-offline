@@ -34,7 +34,7 @@ impl Parkrun {
     }
 
     pub fn save(&self) -> Result<(), Box<Error>> {
-        Ok(())
+       Err(format!("Unable to save results to {}", self.path.display()))?
     }
 
     pub fn download(&mut self) -> Result<(), Box<Error>> {
@@ -59,6 +59,6 @@ impl Parkrun {
             return Ok(());
         }
 
-        Err("Unable to retrieve/save results.")?
+        Err(format!("Unable to retrieve results from {}", self.url))?
     }
 }
