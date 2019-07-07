@@ -1,10 +1,9 @@
-use std::{error::Error, path::PathBuf};
+use std::error::Error;
 use table_extract;
 
 #[derive(Default, Debug)]
 pub struct Parkrun {
     url: String,
-    path: PathBuf,
     records: Vec<Record>,
 }
 
@@ -19,10 +18,9 @@ pub struct Record {
 }
 
 impl Parkrun {
-    pub fn new(url: String, path: PathBuf) -> Self {
+    pub fn new(url: String) -> Self {
         Parkrun {
             url,
-            path,
             records: Vec::with_capacity(300),
         }
     }
@@ -34,7 +32,7 @@ impl Parkrun {
     }
 
     pub fn save(&self) -> Result<(), Box<Error>> {
-        Err(format!("Unable to save results to {}", self.path.display()))?
+        Err("Unable to save results")?
     }
 
     pub fn download(&mut self) -> Result<(), Box<Error>> {
