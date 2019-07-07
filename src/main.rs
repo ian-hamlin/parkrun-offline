@@ -19,7 +19,7 @@ fn main() {
     let mut pr = parkrun::Parkrun::new(opt.url);
 
     match pr.orchestrate() {
-        Ok(_) => println!("Extract complete"),
-        Err(e) => println!("Failed to complete \"{}\"", e),
+        Ok(_) => {}
+        Err(e) => eprintln!("Failed to complete \"{}\"", e),
     }
 }
