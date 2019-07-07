@@ -1,3 +1,5 @@
+use csv;
+use serde::Serialize;
 use std::error::Error;
 use table_extract;
 
@@ -7,7 +9,7 @@ pub struct Parkrun {
     records: Vec<Record>,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Serialize)]
 pub struct Record {
     position: String,
     parkrunner: String,
@@ -29,10 +31,6 @@ impl Parkrun {
         self.download()?;
         self.save()?;
         Ok(())
-    }
-
-    pub fn save(&self) -> Result<(), Box<Error>> {
-        Err("Unable to save results")?
     }
 
     pub fn download(&mut self) -> Result<(), Box<Error>> {
@@ -58,5 +56,18 @@ impl Parkrun {
         }
 
         Err(format!("Unable to retrieve results from {}", self.url))?
+    }
+
+    pub fn save(&self) -> Result<(), Box<Error>> {
+        let out = std::io::stdout();
+        let out = out.lock();
+        let mut wtr = csv::Writer::from_writer(out);
+
+        for rec in &self.records {
+            wtr.serialize(rec)?;
+        }
+
+        wtr.flush()?;
+        Ok(())
     }
 }
