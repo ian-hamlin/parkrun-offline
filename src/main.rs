@@ -1,3 +1,4 @@
+mod html;
 mod parkrun;
 use structopt::StructOpt;
 

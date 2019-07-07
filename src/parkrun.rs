@@ -1,3 +1,4 @@
+use crate::html::Html;
 use csv;
 use serde::Serialize;
 use std::error::Error;
@@ -42,10 +43,10 @@ impl Parkrun {
 
                 let rec = Record {
                     position: slice[0].clone(),
-                    parkrunner: slice[1].clone(),
+                    parkrunner: slice[1].remove_anchor(),
                     time: slice[2].clone(),
                     category: slice[3].clone(),
-                    age_grade: slice[4].clone(),
+                    age_grade: slice[4].remove_anchor(),
                     gender: slice[5].clone(),
                 };
 
