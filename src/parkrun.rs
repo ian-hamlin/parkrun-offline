@@ -1,4 +1,4 @@
-use crate::html::Html;
+use crate::clean::Clean;
 use csv;
 use serde::Serialize;
 use std::error::Error;

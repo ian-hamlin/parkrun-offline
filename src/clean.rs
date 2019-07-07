@@ -1,8 +1,8 @@
-pub trait Html {
+pub trait Clean {
     fn remove_anchor(&self) -> Self;
 }
 
-impl Html for String {
+impl Clean for String {
     fn remove_anchor(&self) -> Self {
         let mut result = String::new();
 
