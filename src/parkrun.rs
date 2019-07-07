@@ -34,7 +34,7 @@ impl Parkrun {
     }
 
     pub fn save(&self) -> Result<(), Box<Error>> {
-       Err(format!("Unable to save results to {}", self.path.display()))?
+        Err(format!("Unable to save results to {}", self.path.display()))?
     }
 
     pub fn download(&mut self) -> Result<(), Box<Error>> {
