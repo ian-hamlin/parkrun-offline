@@ -13,6 +13,7 @@ pub struct Parkrun {
 #[derive(Default, Debug, Serialize)]
 pub struct Record {
     position: String,
+    athlete_number: String,
     parkrunner: String,
     time: String,
     category: String,
@@ -45,6 +46,7 @@ impl Parkrun {
 
                 let rec = Record {
                     position: slice[0].clone(),
+                    athlete_number: slice[1].find_athlete_number(),
                     parkrunner: slice[1].remove_anchor(),
                     time: slice[2].clone(),
                     category: slice[3].remove_anchor(),

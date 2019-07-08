@@ -2,6 +2,7 @@ pub trait Clean {
     fn remove_anchor(&self) -> Self;
     fn remove_percentage(&self) -> Self;
     fn normalise_age_grade(&self) -> Self;
+    fn find_athlete_number(&self) -> Self;
 }
 
 impl Clean for String {
@@ -55,12 +56,40 @@ impl Clean for String {
 
         result
     }
+
+    /// athleteNumber=3011785
+    fn find_athlete_number(&self) -> Self {
+        let mut result = String::new();
+
+        if let Some(left) = self.find("athleteNumber=") {
+            if let Some(right) = self[left..].find('"') {
+                result.push_str(&self[left + 14..right + left]);
+            }
+        }
+
+        result
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn find_athlete_number_empty() {
+        let output = "no number".to_string().find_athlete_number();
+        assert_eq!(String::from(""), output);
+    }
+
+    #[test]
+    fn find_athlete_number() {
+        let output =
+            "<a href=\"athletehistory?athleteNumber=5799061\" target=\"_top\">Ian HAMLIN</a>"
+                .to_string()
+                .find_athlete_number();
+        assert_eq!(String::from("5799061"), output);
+    }
 
     #[test]
     fn normalise_age_grade_world_record() {
