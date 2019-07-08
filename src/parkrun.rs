@@ -17,6 +17,7 @@ pub struct Record {
     time: String,
     category: String,
     age_grade: String,
+    age_grade_class: String,
     gender: String,
 }
 
@@ -40,13 +41,15 @@ impl Parkrun {
         if let Some(data) = table_extract::Table::find_by_id(&body, "results") {
             for row in &data {
                 let slice = row.as_slice();
+                let percent_val = slice[4].remove_percentage();
 
                 let rec = Record {
                     position: slice[0].clone(),
                     parkrunner: slice[1].remove_anchor(),
                     time: slice[2].clone(),
                     category: slice[3].remove_anchor(),
-                    age_grade: slice[4].remove_percentage(),
+                    age_grade: percent_val.clone(),
+                    age_grade_class: percent_val.normalise_age_grade(),
                     gender: slice[5].clone(),
                 };
 

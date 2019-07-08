@@ -1,6 +1,7 @@
 pub trait Clean {
     fn remove_anchor(&self) -> Self;
     fn remove_percentage(&self) -> Self;
+    fn normalise_age_grade(&self) -> Self;
 }
 
 impl Clean for String {
@@ -31,11 +32,26 @@ impl Clean for String {
         let mut result = String::new();
         // Find the bit to chop.result
         if let Some(marker) = self.find('%') {
-            result.push_str(&self[..marker].trim_end());
+            result.push_str(&self[..marker].trim());
         } else {
             // Else just keep the original input.
             result.push_str(self);
         }
+
+        result
+    }
+
+    fn normalise_age_grade(&self) -> Self {
+        let mut result = String::new();
+
+        match self.parse::<f64>() {
+            Ok(x) if x >= 100f64 => result.push_str("World Record"),
+            Ok(x) if x >= 90f64 && x < 100f64 => result.push_str("World Class"),
+            Ok(x) if x >= 80f64 && x < 90f64 => result.push_str("National Class"),
+            Ok(x) if x >= 70f64 && x < 80f64 => result.push_str("Regional Class"),
+            Ok(x) if x >= 60f64 && x < 70f64 => result.push_str("Local Class"),
+            _ => {}
+        };
 
         result
     }
@@ -47,7 +63,66 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn should_return_input() {
+    fn normalise_age_grade_world_record() {
+        let lower = "100".to_string().normalise_age_grade();
+
+        assert_eq!("World Record".to_string(), lower);
+    }
+
+    #[test]
+    fn normalise_age_grade_world_class() {
+        let lower = "90".to_string().normalise_age_grade();
+        let upper = "99.99".to_string().normalise_age_grade();
+
+        assert_eq!("World Class".to_string(), lower);
+        assert_eq!("World Class".to_string(), upper);
+    }
+
+    #[test]
+    fn normalise_age_grade_national_class() {
+        let lower = "80".to_string().normalise_age_grade();
+        let upper = "89.99".to_string().normalise_age_grade();
+
+        assert_eq!("National Class".to_string(), lower);
+        assert_eq!("National Class".to_string(), upper);
+    }
+
+    #[test]
+    fn normalise_age_grade_regional_class() {
+        let lower = "70.00".to_string().normalise_age_grade();
+        let upper = "79.99".to_string().normalise_age_grade();
+
+        assert_eq!("Regional Class".to_string(), lower);
+        assert_eq!("Regional Class".to_string(), upper);
+    }
+
+    #[test]
+    fn normalise_age_grade_localclass() {
+        let lower = "60.00".to_string().normalise_age_grade();
+        let upper = "69.99".to_string().normalise_age_grade();
+
+        assert_eq!("Local Class".to_string(), lower);
+        assert_eq!("Local Class".to_string(), upper);
+    }
+
+    #[test]
+    fn remove_percentage_should_return_input() {
+        let input = String::from("hello world");
+        let output = input.remove_percentage();
+
+        assert_eq!("hello world".to_string(), output);
+    }
+
+    #[test]
+    fn remove_percentage_should_return_section_before_percent() {
+        let input = String::from(" hello  %world");
+        let output = input.remove_percentage();
+
+        assert_eq!("hello".to_string(), output);
+    }
+
+    #[test]
+    fn remove_anchor_should_return_input() {
         let input = String::from("hello world");
         let output = input.remove_anchor();
 
@@ -55,7 +130,7 @@ mod tests {
     }
 
     #[test]
-    fn should_return_input_if_wrong_order() {
+    fn remove_anchor_should_return_input_if_wrong_order() {
         let input = String::from("<hello world>");
         let output = input.remove_anchor();
 
@@ -63,7 +138,7 @@ mod tests {
     }
 
     #[test]
-    fn should_return_input_if_missing_end() {
+    fn remove_anchor_should_return_input_if_missing_end() {
         let input = String::from("<a href>hello world");
         let output = input.remove_anchor();
 
@@ -71,7 +146,7 @@ mod tests {
     }
 
     #[test]
-    fn should_return_input_if_missing_start() {
+    fn remove_anchor_should_return_input_if_missing_start() {
         let input = String::from("hello world</a>");
         let output = input.remove_anchor();
 
@@ -79,7 +154,7 @@ mod tests {
     }
 
     #[test]
-    fn should_return_anchor_content() {
+    fn remove_anchor_should_return_anchor_content() {
         let input = String::from("<a href>hello world</a>");
         let output = input.remove_anchor();
 
