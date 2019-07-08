@@ -1,5 +1,6 @@
 pub trait Clean {
     fn remove_anchor(&self) -> Self;
+    fn remove_percentage(&self) -> Self;
 }
 
 impl Clean for String {
@@ -19,6 +20,19 @@ impl Clean for String {
             }
         }
         if result.is_empty() {
+            // Else just keep the original input.
+            result.push_str(self);
+        }
+
+        result
+    }
+
+    fn remove_percentage(&self) -> Self {
+        let mut result = String::new();
+        // Find the bit to chop.result
+        if let Some(marker) = self.find('%') {
+            result.push_str(&self[..marker].trim_end());
+        } else {
             // Else just keep the original input.
             result.push_str(self);
         }

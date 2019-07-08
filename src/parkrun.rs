@@ -46,7 +46,7 @@ impl Parkrun {
                     parkrunner: slice[1].remove_anchor(),
                     time: slice[2].clone(),
                     category: slice[3].remove_anchor(),
-                    age_grade: slice[4].clone(),
+                    age_grade: slice[4].remove_percentage(),
                     gender: slice[5].clone(),
                 };
 
