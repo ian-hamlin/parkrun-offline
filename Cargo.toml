@@ -20,3 +20,6 @@ reqwest = "0.9"
 table-extract = "0.2.1"
 csv = "1.1"
 serde = { version = "1.0.91", features = ["derive"] }
+
+[dev-dependencies]
+pretty_assertions = "0.6.1"
