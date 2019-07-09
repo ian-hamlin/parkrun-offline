@@ -16,7 +16,7 @@ name = "proff"
 
 [dependencies]
 structopt = "0.2"
-reqwest = "0.9"
+reqwest = { version = "0.9", features = ["rustls-tls"] }
 table-extract = "0.2.1"
 csv = "1.1"
 serde = { version = "1.0.91", features = ["derive"] }

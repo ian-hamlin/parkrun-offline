@@ -47,7 +47,7 @@ jobs:
           sudo apt update -y
           sudo apt install musl-tools -y
         displayName: "Install musl-tools"
-      - script: cargo build --target x86_64-unknown-linux-musl --release --features "rustls-tls"
+      - script: cargo build --target x86_64-unknown-linux-musl --release
         displayName: cargo build
       - template: ci/azure-publish-artifact.yml
         parameters:
