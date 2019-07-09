@@ -6,6 +6,7 @@ edition = "2018"
 description = """
 parkrun-offline is an app that will download parkrun results to a csv file.
 """
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -16,10 +17,14 @@ name = "proff"
 
 [dependencies]
 structopt = "0.2"
-reqwest = { version = "0.9", features = ["rustls-tls"] }
+reqwest = "0.9"
 table-extract = "0.2.1"
 csv = "1.1"
 serde = { version = "1.0.91", features = ["derive"] }
+openssl = { version = '0.10.11', optional = true }
+
+[features]
+vendored-openssl = ['openssl/vendored']
 
 [dev-dependencies]
 pretty_assertions = "0.6.1"
