@@ -138,16 +138,16 @@ jobs:
       - script: dir
         workingDirectory: $(System.DefaultWorkingDirectory)
         displayName: List contents of a folder
-      # - task: GithubRelease@0
-      #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-      #   inputs:
-      #     gitHubConnection: 'ian-hamlin'
-      #     repositoryName: 'ian-hamlin/parkrun-offline'
-      #     action: 'edit'
-      #     target: '$(build.sourceVersion)'
-      #     tagSource: 'manual'
-      #     tag: '$(build.my_tag)'
-      #     assets: '$(System.DefaultWorkingDirectory)/*.zip'
-      #     title: '$(build.my_tag) - $(build.date)'
-      #     assetUploadMode: 'replace'
-      #     addChangeLog: false
+      - task: GithubRelease@0
+        condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+        inputs:
+          gitHubConnection: 'ian-hamlin'
+          repositoryName: 'ian-hamlin/parkrun-offline'
+          action: 'edit'
+          target: '$(build.sourceVersion)'
+          tagSource: 'manual'
+          tag: '$(build.my_tag)'
+          assets: '$(System.DefaultWorkingDirectory)/*.zip'
+          title: '$(build.my_tag) - $(build.date)'
+          assetUploadMode: 'replace'
+          addChangeLog: false
