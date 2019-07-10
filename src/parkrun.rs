@@ -21,6 +21,7 @@ pub struct Record {
     age_grade: String,
     age_grade_class: String,
     gender: String,
+    total_runs: String,
 }
 
 impl Parkrun {
@@ -61,6 +62,7 @@ impl Parkrun {
                     age_grade: percent_val.clone(),
                     age_grade_class: percent_val.normalise_age_grade(),
                     gender: slice[5].clone(),
+                    total_runs: slice[9].clone(),
                 };
 
                 self.records.push(rec);
