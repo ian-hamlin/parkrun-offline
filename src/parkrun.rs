@@ -35,12 +35,12 @@ impl Parkrun {
     }
 
     pub fn orchestrate(&mut self) -> Result<(), Box<Error>> {
-        self.download()?;
+        self.download_and_format()?;
         self.save()?;
         Ok(())
     }
 
-    pub fn download(&mut self) -> Result<(), Box<Error>> {
+    pub fn download_and_format(&mut self) -> Result<(), Box<Error>> {
         let body = reqwest::get(&self.url)?.text()?;
 
         if let Some(data) = table_extract::Table::find_by_id(&body, "results") {
