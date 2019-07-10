@@ -3,6 +3,7 @@ pub trait Clean {
     fn remove_percentage(&self) -> Self;
     fn normalise_age_grade(&self) -> Self;
     fn find_athlete_number(&self) -> Self;
+    fn normalise_first_timer(&self) -> Self;
 }
 
 impl Clean for String {
@@ -69,12 +70,32 @@ impl Clean for String {
 
         result
     }
+
+    fn normalise_first_timer(&self) -> Self {
+        if self.to_lowercase().contains("first timer") {
+            String::from("Yes")
+        } else {
+            String::from("")
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn normalise_first_timer_yes() {
+        let output = "First Timer!".to_string().normalise_first_timer();
+        assert_eq!(String::from("Yes"), output);
+    }
+
+    #[test]
+    fn normalise_first_timer_no() {
+        let output = "Tirst Fimer!".to_string().normalise_first_timer();
+        assert_eq!(String::from(""), output);
+    }
 
     #[test]
     fn find_athlete_number_empty() {

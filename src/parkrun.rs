@@ -23,6 +23,7 @@ pub struct Record {
     gender_position: String,
     gender: String,
     total_runs: String,
+    first_timer: String,
 }
 
 impl Parkrun {
@@ -65,6 +66,7 @@ impl Parkrun {
                     gender_position: slice[6].clone(),
                     gender: slice[5].clone(),
                     total_runs: slice[9].clone(),
+                    first_timer: slice[8].normalise_first_timer(),
                 };
 
                 self.records.push(rec);
