@@ -20,6 +20,7 @@ pub struct Record {
     category: String,
     age_grade: String,
     age_grade_class: String,
+    gender_position: String,
     gender: String,
     total_runs: String,
 }
@@ -61,6 +62,7 @@ impl Parkrun {
                     category: slice[3].remove_anchor(),
                     age_grade: percent_val.clone(),
                     age_grade_class: percent_val.normalise_age_grade(),
+                    gender_position: slice[6].clone(),
                     gender: slice[5].clone(),
                     total_runs: slice[9].clone(),
                 };
