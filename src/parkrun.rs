@@ -47,7 +47,7 @@ impl Parkrun {
                 let slice = row.as_slice();
                 let parkrunner = slice[1].remove_anchor();
 
-                if parkrunner.to_lowercase() == "unknown" {
+                if self.remove_unknown && parkrunner.to_lowercase() == "unknown" {
                     continue;
                 }
 
