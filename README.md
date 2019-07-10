@@ -20,10 +20,12 @@ A small command line app that will download parkrun results to a csv file.
 
 ```console
 USAGE:
-    proff --url <parkrun url>
+    proff [FLAGS] --url <parkrun url>
 
 FLAGS:
     -h, --help       Prints help information
+    -r, --remove     A flag indicating if Unknown runners should be removed from the results, defaults to false if not
+                     supplied.
     -V, --version    Prints version information
 
 OPTIONS:

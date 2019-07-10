@@ -12,11 +12,15 @@ struct Opt {
         raw(required = "true")
     )]
     url: String,
+
+    /// A flag indicating if Unknown runners should be removed from the results, defaults to false if not supplied.
+    #[structopt(name = "remove unknown", short = "r", long = "remove")]
+    remove_unknown: bool,
 }
 
 fn main() {
     let opt = Opt::from_args();
-    let mut pr = parkrun::Parkrun::new(opt.url);
+    let mut pr = parkrun::Parkrun::new(opt.url, opt.remove_unknown);
 
     match pr.orchestrate() {
         Ok(_) => {}

@@ -8,6 +8,7 @@ use table_extract;
 pub struct Parkrun {
     url: String,
     records: Vec<Record>,
+    remove_unknown: bool,
 }
 
 #[derive(Default, Debug, Serialize)]
@@ -23,10 +24,11 @@ pub struct Record {
 }
 
 impl Parkrun {
-    pub fn new(url: String) -> Self {
+    pub fn new(url: String, remove_unknown: bool) -> Self {
         Parkrun {
             url,
-            records: Vec::with_capacity(300),
+            records: Vec::with_capacity(1000),
+            remove_unknown,
         }
     }
 
@@ -42,12 +44,18 @@ impl Parkrun {
         if let Some(data) = table_extract::Table::find_by_id(&body, "results") {
             for row in &data {
                 let slice = row.as_slice();
+                let parkrunner = slice[1].remove_anchor();
+
+                if parkrunner.to_lowercase() == "unknown" {
+                    continue;
+                }
+
                 let percent_val = slice[4].remove_percentage();
 
                 let rec = Record {
                     position: slice[0].clone(),
                     athlete_number: slice[1].find_athlete_number(),
-                    parkrunner: slice[1].remove_anchor(),
+                    parkrunner,
                     time: slice[2].clone(),
                     category: slice[3].remove_anchor(),
                     age_grade: percent_val.clone(),
