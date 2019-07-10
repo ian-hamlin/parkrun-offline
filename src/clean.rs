@@ -4,6 +4,7 @@ pub trait Clean {
     fn normalise_age_grade(&self) -> Self;
     fn find_athlete_number(&self) -> Self;
     fn normalise_first_timer(&self) -> Self;
+    fn normalise_personal_best(&self) -> Self;
 }
 
 impl Clean for String {
@@ -78,12 +79,32 @@ impl Clean for String {
             String::from("")
         }
     }
+
+    fn normalise_personal_best(&self) -> Self {
+        if self.to_lowercase().contains("new pb") {
+            String::from("Yes")
+        } else {
+            String::from("")
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn normalise_personal_best_yes() {
+        let output = "New PB!".to_string().normalise_personal_best();
+        assert_eq!(String::from("Yes"), output);
+    }
+
+    #[test]
+    fn normalise_personal_best_no() {
+        let output = "Pew NB!".to_string().normalise_personal_best();
+        assert_eq!(String::from(""), output);
+    }
 
     #[test]
     fn normalise_first_timer_yes() {
