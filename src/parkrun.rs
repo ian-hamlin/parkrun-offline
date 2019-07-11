@@ -60,7 +60,7 @@ impl Parkrun {
                     position: slice[0].clone(),
                     athlete_number: slice[1].find_athlete_number(),
                     parkrunner,
-                    time: slice[2].clone(),
+                    time: slice[2].normalise_time(),
                     category: slice[3].remove_anchor(),
                     age_grade: percent_val.clone(),
                     age_grade_class: percent_val.normalise_age_grade(),

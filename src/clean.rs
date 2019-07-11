@@ -1,3 +1,5 @@
+use std::fmt::Write;
+
 pub trait Clean {
     fn remove_anchor(&self) -> Self;
     fn remove_percentage(&self) -> Self;
@@ -5,11 +7,12 @@ pub trait Clean {
     fn find_athlete_number(&self) -> Self;
     fn normalise_first_timer(&self) -> Self;
     fn normalise_personal_best(&self) -> Self;
+    fn normalise_time(&self) -> Self;
 }
 
 impl Clean for String {
     fn remove_anchor(&self) -> Self {
-        let mut result = String::new();
+        let mut result = String::with_capacity(100);
         // Find the bits to chop.
         let left = self.find('>');
         let right = self.rfind('<');
@@ -32,7 +35,7 @@ impl Clean for String {
     }
 
     fn remove_percentage(&self) -> Self {
-        let mut result = String::new();
+        let mut result = String::with_capacity(10);
         // Find the bit to chop.result
         if let Some(marker) = self.find('%') {
             result.push_str(&self[..marker].trim());
@@ -45,7 +48,7 @@ impl Clean for String {
     }
 
     fn normalise_age_grade(&self) -> Self {
-        let mut result = String::new();
+        let mut result = String::with_capacity(15);
 
         match self.parse::<f64>() {
             Ok(x) if x >= 100f64 => result.push_str("World Record"),
@@ -61,7 +64,7 @@ impl Clean for String {
 
     /// athleteNumber=5799061
     fn find_athlete_number(&self) -> Self {
-        let mut result = String::new();
+        let mut result = String::with_capacity(15);
 
         if let Some(left) = self.find("athleteNumber=") {
             if let Some(right) = self[left..].find('"') {
@@ -87,12 +90,56 @@ impl Clean for String {
             String::from("")
         }
     }
+
+    fn normalise_time(&self) -> Self {
+        let mut result = String::with_capacity(8);
+
+        let parts: Vec<&str> = self.split(':').collect();
+
+        if parts.len() == 3 {
+            let _ = write!(&mut result, "{:0>2}:", parts[0]);
+            let _ = write!(&mut result, "{:0>2}:", parts[1]);
+            let _ = write!(&mut result, "{:0>2}", parts[2]);
+        } else if parts.len() == 2 {
+            result.push_str("00:");
+            let _ = write!(&mut result, "{:0>2}:", parts[0]);
+            let _ = write!(&mut result, "{:0>2}", parts[1]);
+        } else {
+            result.push_str(self);
+        }
+
+        result
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn normalise_time_not_human() {
+        let output = "9:22".to_string().normalise_time();
+        assert_eq!(String::from("00:09:22"), output);
+    }
+
+    #[test]
+    fn normalise_time_sub_hour() {
+        let output = "18:22".to_string().normalise_time();
+        assert_eq!(String::from("00:18:22"), output);
+    }
+
+    #[test]
+    fn normalise_time_single_hour() {
+        let output = "1:20:22".to_string().normalise_time();
+        assert_eq!(String::from("01:20:22"), output);
+    }
+
+    #[test]
+    fn normalise_time_full_hours() {
+        let output = "21:20:22".to_string().normalise_time();
+        assert_eq!(String::from("21:20:22"), output);
+    }
 
     #[test]
     fn normalise_personal_best_yes() {
