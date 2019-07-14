@@ -48,27 +48,47 @@ impl Parkrun {
         if let Some(data) = table_extract::Table::find_by_id(&body, "results") {
             for row in &data {
                 let slice = row.as_slice();
-                let parkrunner = slice[1].remove_anchor();
 
-                if self.remove_unknown && parkrunner.to_lowercase() == "unknown" {
+                if slice.is_empty() {
+                    // some parkruns (for example yakutskdokhsun) have a double
+                    // header row which causes some issues.
                     continue;
                 }
 
-                let percent_val = slice[4].remove_percentage();
+                let athlete_number = slice
+                    .get(1)
+                    .unwrap_or(&String::from(""))
+                    .find_athlete_number();
+
+                if self.remove_unknown && athlete_number.is_empty() {
+                    continue;
+                }
+
+                let parkrunner = slice.get(1).unwrap_or(&String::from("")).remove_anchor();
+                let percent_val = slice
+                    .get(4)
+                    .unwrap_or(&String::from(""))
+                    .remove_percentage();
 
                 let rec = Record {
-                    position: slice[0].clone(),
-                    athlete_number: slice[1].find_athlete_number(),
+                    position: slice.get(0).unwrap_or(&String::from("")).clone(),
+                    athlete_number,
                     parkrunner,
-                    time: slice[2].normalise_time(),
-                    category: slice[3].remove_anchor(),
+                    time: slice.get(2).unwrap_or(&String::from("")).normalise_time(),
+                    category: slice.get(3).unwrap_or(&String::from("")).remove_anchor(),
                     age_grade: percent_val.clone(),
                     age_grade_class: percent_val.normalise_age_grade(),
-                    gender_position: slice[6].clone(),
-                    gender: slice[5].clone(),
-                    total_runs: slice[9].clone(),
-                    first_timer: slice[8].normalise_first_timer(),
-                    new_pb: slice[8].normalise_personal_best(),
+                    gender_position: slice.get(6).unwrap_or(&String::from("")).clone(),
+                    gender: slice.get(5).unwrap_or(&String::from("")).clone(),
+                    total_runs: slice.get(9).unwrap_or(&String::from("")).clone(),
+                    first_timer: slice
+                        .get(8)
+                        .unwrap_or(&String::from(""))
+                        .normalise_first_timer(),
+                    new_pb: slice
+                        .get(8)
+                        .unwrap_or(&String::from(""))
+                        .normalise_personal_best(),
                 };
 
                 self.records.push(rec);
